@@ -1,18 +1,38 @@
 "use client"
 
 import React from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';  
+import {connect} from '@/dbConfig/dbConfig';  
+
+
+connect();
 
 export default function LoginPage()
 {
+
+  const router=useRouter();
     const [user,setUser]=React.useState({
    
         email:"",
         password:"",
     })
-    
+    const [loading,setLoading]=React.useState(false);
     const handleSubmit = async()=>{
+try {
 
+  setLoading(true);
+  const response=await axios.post('/api/user/login',user);
+  console.log('login success',response.data);
+  router.push('/dashboard');
+} catch (error:any) {
+
+  console.log(error.message);
+}
+finally{ 
+  setLoading(false);
+}
     }
     
     return (

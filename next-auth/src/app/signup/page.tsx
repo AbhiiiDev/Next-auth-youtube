@@ -4,8 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { NextResponse } from 'next/server';
 
-export default function SignupPage()
+export default function SignupPage(response:NextResponse)
 {
 
   const router=useRouter()
@@ -16,7 +17,7 @@ export default function SignupPage()
     })
 
     const [loading,setLoading]=React.useState(false);
-
+    const [error,setError]=React.useState(null);
     
     const handleSubmit = async()=>{
       try {
@@ -24,8 +25,22 @@ export default function SignupPage()
         const response =await axios.post('/api/user/signup',user);
         console.log('signup success',response.data);
 router.push('/login');
-
-      } catch (error) {
+      } catch (error:any) {
+        console.error('Signup error:', error);
+        if (error.response) {
+            
+            console.error('Server error:', error.response.data);
+            setError("User already registered, please login");
+        } else if (error.request) {
+           
+            console.error('Request error:', error.request);
+            setError("Request error, please try again later");
+        } else {
+     
+            console.error('Other error:', error.message);
+            setError("An error occurred, please try again later");
+        }
+    
         
       }
       finally{
