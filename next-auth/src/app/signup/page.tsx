@@ -1,24 +1,48 @@
 "use client"
 
 import React from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage()
 {
+
+  const router=useRouter()
     const [user,setUser]=React.useState({
         username:"",
         email:"",
         password:"",
     })
+
+    const [loading,setLoading]=React.useState(false);
+
     
     const handleSubmit = async()=>{
+      try {
+        setLoading(true);
+        const response =await axios.post('/api/user/signup',user);
+        console.log('signup success',response.data);
+router.push('/login');
+
+      } catch (error) {
+        
+      }
+      finally{
+        setLoading(false);
+      }
+
 
     }
     
     return (
-        <div className="flex justify-center items-center h-screen bg-black">
-        <div className="text-white w-[650px] flex flex-col">
-          <h2 className="mt-5 text-center text-2xl font-bold">
+        <div className="flex justify-center items-center h-screen bg-black ">
+       
+         { 
+         
+         loading ?<p className='text-white'>loading ....</p> : 
+         <div className="text-white w-[650px] flex flex-col">
+         <h2 className="mt-5 text-center text-2xl font-bold">
             SignUp ; )
           </h2>
           <div className="mt-5 p-5">
@@ -30,7 +54,8 @@ export default function SignupPage()
                   id="username"
                   value={user.username}
                   onChange={(e) => setUser({ ...user, username: e.target.value })}
-                  className="bg-gray-800 rounded-md p-2 text-white w-full"
+                  className="bg-gray-800 rounded-md p-2 text-white w-full "
+                  
                 />
               </div>
               <div className="mb-4">
@@ -64,6 +89,7 @@ export default function SignupPage()
             </form>
           </div>
         </div>
+}
       </div>
       
     );
