@@ -5,6 +5,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { NextResponse } from 'next/server';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function SignupPage(response:NextResponse)
 {
@@ -24,7 +25,8 @@ export default function SignupPage(response:NextResponse)
         setLoading(true);
         const response =await axios.post('/api/user/signup',user);
         console.log('signup success',response.data);
-router.push('/login');
+        toast('Signup Successfull')
+           router.push('/login');
       } catch (error:any) {
         console.error('Signup error:', error);
         if (error.response) {
@@ -45,6 +47,7 @@ router.push('/login');
       }
       finally{
         setLoading(false);
+        setUser({username:"",email:"",password:""})
       }
 
 
@@ -52,7 +55,7 @@ router.push('/login');
     
     return (
         <div className="flex justify-center items-center h-screen bg-black ">
-       
+       <div><Toaster/></div>
          { 
          
          loading ?<p className='text-white'>loading ....</p> : 
